@@ -1,0 +1,21 @@
+[package]
+name = "helm-list-charts"
+version = "1.0.0"
+edition = "2024"
+
+[dependencies]
+anyhow = "1.0.97"
+chrono = "0.4.40"
+clap = { version = "4.5.32", features = ["derive"] }
+reqwest = { version = "0.12.15", features = ["blocking", "rustls-tls"] }
+semver = "1.0.26"
+serde = { version = "1.0.219", features = ["derive"] }
+serde_yaml = "0.9.34"
+tabwriter = "1.4.1"
+
+[profile.release]
+opt-level = "z"   # Optimize for size.
+lto = true        # Enable link time optimization.
+codegen-units = 1 # Reduce parallel code generation units.
+strip = true      # Strip debug symbols.
+panic = "abort"   # Abort on panic.

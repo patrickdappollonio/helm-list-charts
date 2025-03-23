@@ -27,8 +27,10 @@ jobs:
             archive: linux-x86_64
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
-      - shell: bash
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Update version in Cargo.toml
+        shell: bash
         run: |
           # Update the version in Cargo.toml
           TAG_NAME="${{ github.event.release.tag_name }}"
@@ -39,7 +41,7 @@ jobs:
               sed -i -e "s/^version = .*/version = \"$TAG_NAME\"/" Cargo.toml
           fi
       - name: "Install pkg-config and openssl-dev on Ubuntu"
-        if: matrix.os == 'ubuntu-latest'
+        if: startsWith(matrix.os, 'ubuntu')
         shell: bash
         run: |
           sudo apt-get update

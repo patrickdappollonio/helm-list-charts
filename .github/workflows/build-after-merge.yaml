@@ -1,0 +1,52 @@
+name: Generate binaries from main branch
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  build:
+    name: Build binary for ${{ matrix.target }}
+    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
+    strategy:
+      matrix:
+        include:
+          - target: aarch64-unknown-linux-gnu
+            os: ubuntu-latest
+            archive: linux-arm64
+          - target: aarch64-apple-darwin
+            os: macos-latest
+            archive: darwin-arm64
+          - target: x86_64-apple-darwin
+            os: macos-latest
+            archive: darwin-x86_64
+          - target: x86_64-unknown-linux-gnu
+            os: ubuntu-latest
+            archive: linux-x86_64
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - shell: bash
+        run: |
+          # Update the version in Cargo.toml
+          TAG_NAME="v0.1.0"
+          TAG_NAME="${TAG_NAME#v}"
+          if [[ "${{ runner.os }}" == "macOS" ]]; then
+              sed -i"" -e "s/^version = .*/version = \"$TAG_NAME\"/" Cargo.toml
+          else
+              sed -i -e "s/^version = .*/version = \"$TAG_NAME\"/" Cargo.toml
+          fi
+      - name: "Install pkg-config and openssl-dev on Ubuntu"
+        if: matrix.os == 'ubuntu-latest'
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pkg-config libssl-dev
+      - name: Build binary for ${{ matrix.target }}
+        uses: taiki-e/upload-rust-binary-action@v1
+        with:
+          bin: ${{ github.event.repository.name}}
+          archive: $bin-$tag-${{ matrix.archive }}
+          target: ${{ matrix.target }}
+          tar: unix
+          dry-run: true

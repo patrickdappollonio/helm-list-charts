@@ -1,5 +1,7 @@
 # `helm-list-charts`
 
+[![Github Downloads](https://img.shields.io/github/downloads/patrickdappollonio/helm-list-charts/total?color=orange&label=github%20downloads)](https://github.com/patrickdappollonio/helm-list-charts/releases)
+
 This is a tiny Rust application that allows you to navigate Helm repository indexes.
 
 Normally, you can use something like `artifacthub.io` to search for Helm charts, but unfortunately the navigation is a bit more point-and-click there than programatical. This tool allows you to provide a target Helm repository and fetch all available charts, and then navigate through them.

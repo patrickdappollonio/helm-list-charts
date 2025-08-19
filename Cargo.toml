@@ -7,7 +7,7 @@ edition = "2024"
 anyhow = "1.0.98"
 chrono = "0.4.41"
 clap = { version = "4.5.43", features = ["derive"] }
-reqwest = { version = "0.12.22", default-features = false, features = [
+reqwest = { version = "0.12.23", default-features = false, features = [
   "blocking",
   "rustls-tls",
 ] }
